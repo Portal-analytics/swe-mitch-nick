@@ -1,0 +1,18 @@
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #222;
+  height: 85px;
+  padding: 20px;
+  color: white;
+}
+
+.App-quotes {
+  position: relative;
+  top: 140px;
+  font-size: 350%;
+  text-align: center;
+}
+
