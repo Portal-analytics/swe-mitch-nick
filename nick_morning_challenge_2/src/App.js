@@ -51,13 +51,10 @@ class App extends Component {
           </MuiThemeProvider>
         </div>
         <MuiThemeProvider>
-            <RaisedButtonExample></RaisedButtonExample>
-          </MuiThemeProvider>
-        {/*<button
-          className="button"
-          onClick={(e) => this.next_quote(e)}>
-          Fucking Click Me!
-        </button>*/}
+          <div onClick={(e) => this.next_quote(e)}>
+            <RaisedButtonExample/>
+          </div>
+        </MuiThemeProvider>
         <h1 className="App-quotes">
           {quotes[this.state.clicks]}
         </h1>
