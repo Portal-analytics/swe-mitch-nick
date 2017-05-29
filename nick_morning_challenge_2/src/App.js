@@ -52,7 +52,7 @@ class App extends Component {
         </div>
         <MuiThemeProvider>
           <div onClick={(e) => this.next_quote(e)}>
-            <RaisedButtonExample/>
+          <RaisedButtonExample/>
           </div>
         </MuiThemeProvider>
         <h1 className="App-quotes">
