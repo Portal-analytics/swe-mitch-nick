@@ -1,10 +1,21 @@
 import React, { Component } from "react";
 import "./App.css";
-//import FireBase from 'firebase';
+import * as firebase from 'firebase';
 
+let config = {
+  apiKey: "AIzaSyAfueo83UF2FqlxXIfzl_tJo8T3W4lBb3I",
+  authDomain: "daily-challenge-6.firebaseapp.com",
+  databaseURL: "https://daily-challenge-6.firebaseio.com",
+  projectId: "daily-challenge-6",
+  storageBucket: "daily-challenge-6.appspot.com",
+  messagingSenderId: "211076160675"
+};
+firebase.initializeApp(config);
 
+var readFromFirebase = firebase.database().ref("firebase_list");
 
 class App extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -37,22 +48,37 @@ class App extends Component {
     });
   };
 
+  //COME BACK AND FUCK WITH THIS UNTIL IT WORKS. Tried adding temp_index to state in order to reference the index when editing.
+
   handleSubmit() {
-    // this.handleNameChange(e);
-    // this.handleDescriptionChange(e);
-    // this.handlePriceChange(e);
+    var temp_index = this.state.index || 0;
     const contract = {
       name: this.state.name,
       description: this.state.description,
-      price: this.state.price
+      price: this.state.price,
+      index: temp_index
     };
 
     var tempList = this.state.list;
     tempList.push(contract);
     this.setState({
       ...this.state,
-      list:tempList
+      list: tempList
     });
+    firebase.database().ref('firebase_list').set(
+      this.state.list
+    );
+  }
+
+  componentWillMount() {
+    readFromFirebase.on('value', (snapshot) => {
+      const val = snapshot.val();
+      debugger;
+      this.setState({
+        ...this.state,
+        list: val || []
+      })
+    })
   }
 
   render() {
@@ -75,10 +101,10 @@ class App extends Component {
             <input type="text" onChange={e => this.handlePriceChange(e)} />
           </label>
           <div>
-          <button type="button" onClick={this.handleSubmit}>Submit</button>
+            <button type="button" onClick={this.handleSubmit}>Submit</button>
           </div>
         </form>
-        <Table list= {this.state.list} onRowChange={(newName, newDescription, newPrice, index) => this.changeRow(newName, newDescription, newPrice, index)}
+        <Table list={this.state.list} onRowChange={(newName, newDescription, newPrice, index) => this.changeRow(newName, newDescription, newPrice, index)}
         />
       </div>
     );
@@ -97,13 +123,6 @@ class Table extends React.Component {
     };
   }
 
-  // changeEdit(index){
-  //   this.setState({
-  //     ...this.state,
-  //     editing: true,
-  //     index: index
-  //   })
-  // };
   beginEdit(index) {
     this.setState({
       newName: "",
@@ -114,16 +133,16 @@ class Table extends React.Component {
     });
   }
 
-   handleInputChange(field, e) {
+  handleInputChange(field, e) {
     this.setState({
       ...this.state,
       [field]: e.target.value
     });
-    console.log(this.state.name)
   }
 
   changeRow(newName, newDescription, newPrice, index) {
     const changedCell = {
+      ...this.state,
       name: newName,
       description: newDescription,
       price: newPrice
@@ -132,6 +151,9 @@ class Table extends React.Component {
     newContracts[index] = changedCell;
     this.setState({
       ...this.state,
+      list: newContracts
+    });
+    firebase.database().ref('list').set({
       list: newContracts
     });
   }
@@ -148,6 +170,7 @@ class Table extends React.Component {
       editing: false
     });
   }
+
   render() {
     let contract_cells = this.props.list.map((x, index) => (
       <tbody>
@@ -203,38 +226,3 @@ class Table extends React.Component {
 }
 
 export default App;
-
-/*stringifyMyName = () => {
-    return this.state.list.map(function(x) {
-      return [x.name];
-    });
-  };
-  stringifyMyDescription = () => {
-    return this.state.list.map(function(x) {
-      return [x.description];
-    });
-  };
-  stringifyMyPrice = () => {
-    return this.state.list.map(function(x) {
-      return [x.price];
-    });
-  };
-  
-    makeList = () => {
-    return this.state.list.map(function(x) {
-      <li>
-        {this.stringifyMyName(this.state.name)}
-        {" "}
-        {this.stringifyMyDescription(this.state.list)}
-        {" "}
-        {this.stringifyMyPrice(this.state.list)}
-        {" "}
-      </li>;
-    });
-  };
-<ul className="myFuckingList">
-              <li> {this.stringifyMyName(this.state.list)} </li>
-              <li> {this.stringifyMyDescription(this.state.list)} </li>
-              <li> {this.stringifyMyPrice(this.state.list)} </li>
-            </ul>
-            */
