@@ -10,28 +10,44 @@ class App extends Component {
       quotes: [
         "Be kind, rewind",
         "Dont hate, appriciate",
-        "Only you can prevent forest fires"
+        "Only you can prevent forest fires",
+        "Be kind to others",
+        "Don't annoy the UVA honor commitee"
       ]
     };
   }
 
-  render() {
-    var getNextQuote = e => {
-      this.setState(this)({
-        ...this.state,
-        indexNum: this.indexNum + 1,
-        numClicks: this.numClicks + 1
-      });
-      console.log("its working!");
-    };
+  // getNextQuote = e => {
+  //   return(
+  //   e.setState()({
+  //     ...this.state,
+  //     indexNum: this.indexNum + 1,
+  //     numClicks: this.numClicks + 1
+  //   });
+  //   )
+  //   console.log("its working!");
+  // };
 
+  render() {
     return (
       <div className="App">
         <h1>The best darn tootin motivational site!</h1>
 
         <div className="quotes-area">
-          <button onClick={e => getNextQuote(e)}> Click Me :) </button>
-          <h1>{this.state.quotes[this.state.indexNum]} </h1>
+          <button
+            onClick={() =>
+              this.setState({
+                ...this,
+                numClicks: this.state.numClicks + 1,
+                indexNum: this.state.indexNum + 1
+              })}
+          >
+            {" "}Click Me :){" "}
+          </button>
+          <h1>
+            {this.state.quotes[this.state.indexNum]} {this.state.indexNum}
+          </h1>
+
         </div>
 
       </div>
