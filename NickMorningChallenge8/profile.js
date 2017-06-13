@@ -5,8 +5,13 @@ export default class Profile extends React.Component {
   render() {
     return (
       <View>
-        <Text>Profile</Text>
+        <Text style={styles.profileOutput}>Profile</Text>
       </View>
     );
   }
 }
+const styles = StyleSheet.create({
+  profileOutput: {
+    textAlign: "center"
+  }
+});
