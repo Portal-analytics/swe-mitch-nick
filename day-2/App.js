@@ -24,7 +24,7 @@ var quotes = ["GET FUCKING MONEY", "BE FUCKING NICE TO OTHERS",
 
 const AppBarExampleIcon = () => (
   <AppBar
-    title='Great Fucking Startup Advice'
+    title="Great Freakin Startup Advice"
     iconClassNameRight="muidocs-icon-navigation-expand-more"
   />
 );
