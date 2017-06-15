@@ -2,41 +2,83 @@ import React from "react";
 import { StyleSheet, Text, View, Image, TextInput } from "react-native";
 import { NativeRouter, Route, Link } from "react-router-native";
 import NavBar, { NavButton, NavButtonText, NavTitle } from "react-native-nav";
+import * as firebase from "firebase";
 import SideMenu from "react-native-side-menu";
 import Home from "./home";
 import Settings from "./settings";
 import Profile from "./profile";
 
+//Firebase Setup
+var config = {
+  apiKey: "AIzaSyAXgmtVApPhL9tHz7M9ic1bFQ4YKaz9Lvs",
+  authDomain: "react-native-chat-app-67434.firebaseapp.com",
+  databaseURL: "https://react-native-chat-app-67434.firebaseio.com",
+  projectId: "react-native-chat-app-67434",
+  storageBucket: "react-native-chat-app-67434.appspot.com",
+  messagingSenderId: "27458622395"
+};
+firebase.initializeApp(config);
+
+//Create Firebase object reference
+var firebasePosts = firebase.database().ref("Posts");
+
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      message: "",
+      myUsername: "",
+      message: {
+        user: "",
+        text: "",
+        timestamp: ""
+      },
       messages: []
     };
   }
 
   //TextBox Funtions
-  handleTextEditing = text => {
+  clearText(fieldName) {
+    this.refs[fieldName].setNativeProps({ text: "" });
+  }
+
+  handleTextEditing = input => {
     this.setState({
       ...this.state,
-      message: text
+      message: {
+        user: this.state.myUsername,
+        text: input,
+        timestamp: new Date().toTimeString().slice(0, 5)
+      }
     });
   };
 
-  handleTextSubmit = () => {
+  handleTextSubmit = messageText => {
     let newMessageList = this.state.messages;
-    let newMessage = {
-      message: this.state.message + "  " + new Date().toTimeString().slice(0, 5)
-    };
+    let newMessage = this.state.message;
     newMessageList.unshift(newMessage);
+    firebase.database().ref("Posts").set(newMessageList);
 
     this.setState({
       ...this.state,
-      message: "",
+      message: {},
       messages: newMessageList
     });
+    this.clearText(messageText);
   };
+
+  //FIREBASE DATA RETRIEVAL IS CURRENTLY NONFUNCTIONAL
+
+  //Retrieves current ratings list from Firebase
+  // componentWillMount() {
+  //   var items = [];
+  //   firebasePosts.on("child_added", function(snapshot) {
+  //     this.items.push(snapshot.val());
+  //   });
+  //   this.state = {
+  //     ...this.state,
+  //     messages: this.items || []
+  //   };
+  // }
 
   render() {
     return (
@@ -69,16 +111,17 @@ export default class App extends React.Component {
         </NativeRouter>
         <View>
           <TextInput
+            ref={"messageText"}
             style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
-            onChangeText={text => this.handleTextEditing(text)}
-            onSubmitEditing={() => this.handleTextSubmit()}
+            onChangeText={input => this.handleTextEditing(input)}
+            onSubmitEditing={() => this.handleTextSubmit("messageText")}
             returnKeyType="send"
             clearButtonMode="always"
             value={this.state.message}
           />
         </View>
         <View>
-          {this.state.messages.map(text => <Text>{text.message}</Text>)}
+          {this.state.messages.map(message => <Text>{message.text}</Text>)}
         </View>
       </View>
     );
