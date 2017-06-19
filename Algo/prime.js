@@ -16,7 +16,7 @@ function makeCall(isTrue, prime) {
       }
     ],
     function(err, result) {
-      if (result.goNext === true) {
+      if (result.goNext == true) {
         console.log("worked");
         makeCall(result.goNext, 5);
       } else {
