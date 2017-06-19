@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "browserify": "^14.4.0",
+    "prompt": "^1.0.0"
+  }
+}
