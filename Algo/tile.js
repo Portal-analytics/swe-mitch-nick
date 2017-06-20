@@ -1,7 +1,5 @@
 var prompt = require("prompt");
 
-var prompt = require("prompt");
-
 //
 // Start the prompt
 //
